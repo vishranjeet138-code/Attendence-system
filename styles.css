@@ -1,0 +1,76 @@
+body {
+    font-family: Arial;
+    background: #eef2f6;
+    padding: 20px
+}
+
+h1,
+h2,
+h3 {
+    text-align: center;
+    color: #1f4aa8
+}
+
+.box {
+    max-width: 480px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px
+}
+
+input,
+button,
+select {
+    padding: 8px;
+    margin: 6px;
+    width: 100%
+}
+
+button {
+    background: #1f4aa8;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer
+}
+
+.logout {
+    background: #c62828
+}
+
+.present {
+    background: #2e7d32
+}
+
+.weekoff {
+    background: #f57c00
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px
+}
+
+th,
+td {
+    border: 1px solid #ccc;
+    padding: 6px;
+    text-align: center
+}
+
+th {
+    background: #1f4aa8;
+    color: #fff
+}
+
+.delete {
+    background: #d32f2f;
+    font-size: 12px
+}
+
+.hidden {
+    display: none
+}
