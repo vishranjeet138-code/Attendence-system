@@ -1,4 +1,4 @@
-const employees=["amit","divanshu","sujit","ganesh","nanki","shiv kumar","sheetal","manisha","aman","abhishek","khusboo","akshay","vikki","sumit"];
+const employees=["amit","divanshu","sujit","ganesh","nanki","shiv kumar","sheetal","manisha","aman","abhishek","khushboo","akshay","vikki","sumit"];
 const adminPasswords={amit:"Amit2580",divanshu:"Divanshu2580"};
 const EMP_PASSWORD="IDFC1234";
 let currentUser="";
