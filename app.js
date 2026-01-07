@@ -1,6 +1,6 @@
-const employees = ["amit", "divanshu", "sujit", "ganesh", "nanki", "shiv kumar", "sheetal", "manisha", "aman", "abhishek", "khushboo", "akshay", "vikki", "sumit", "Sushant"];
+const employees = ["amit", "divanshu"];
 const adminPasswords = { amit: "Amit2580", divyanshu: "Divyanshu2580" };
-const EMP_PASSWORD = "IDFC1234";
+
 let currentUser = "";
 let isAdmin = false;
 
@@ -243,6 +243,9 @@ async function login() {
       if (p !== acc.password) return alert("Wrong Password");
       currentUser = u;
       isAdmin = acc.accountType === "admin";
+      // persist session
+      localStorage.setItem('currentUser', currentUser);
+      localStorage.setItem('isAdmin', isAdmin ? 'true' : 'false');
       loginBox.classList.add("hidden");
       mainPanel.classList.remove("hidden");
       welcome.innerText = "Welcome " + currentUser.toUpperCase();
@@ -270,6 +273,8 @@ async function login() {
   }
 
   currentUser = u;
+  localStorage.setItem('currentUser', currentUser);
+  localStorage.setItem('isAdmin', isAdmin ? 'true' : 'false');
   loginBox.classList.add("hidden");
   mainPanel.classList.remove("hidden");
   welcome.innerText = "Welcome " + currentUser.toUpperCase();
@@ -277,14 +282,42 @@ async function login() {
 
   if (isAdmin) {
     adminPanel.classList.remove("hidden");
-    loadAdminDropdown();
+    await loadAdminDropdown();
     await loadWeekOffs();
     setTimeout(() => loadAttendance(), 500);
   }
 }
 
 // LOGOUT
-function logout() { location.reload(); }
+function logout() {
+  // clear persisted session
+  localStorage.removeItem('currentUser');
+  localStorage.removeItem('isAdmin');
+  location.reload();
+}
+
+// Restore session from localStorage (keep user logged in across reloads)
+async function restoreSession() {
+  const storedUser = localStorage.getItem('currentUser');
+  const storedIsAdmin = localStorage.getItem('isAdmin') === 'true';
+  if (!storedUser) return;
+  currentUser = storedUser;
+  isAdmin = storedIsAdmin;
+  try {
+    loginBox.classList.add('hidden');
+    mainPanel.classList.remove('hidden');
+    welcome.innerText = 'Welcome ' + currentUser.toUpperCase();
+    await loadToday();
+    if (isAdmin) {
+      adminPanel.classList.remove('hidden');
+      await loadAdminDropdown();
+      await loadWeekOffs();
+      setTimeout(() => loadAttendance(), 500);
+    }
+  } catch (e) {
+    console.error('Error restoring session:', e);
+  }
+}
 
 // MARK PRESENT (ONCE PER DAY)
 async function markPresent() {
@@ -330,11 +363,37 @@ async function applyWeekOff() {
 }
 
 // ADMIN FUNCTIONS
-function loadAdminDropdown() {
+async function loadAdminDropdown() {
   empSelect.innerHTML = "";
-  employees.forEach(e => {
-    empSelect.innerHTML += `<option value="${e}">${e.toUpperCase()}</option>`;
-  });
+  // Try to load users from Firestore `accounts` collection so new users appear for admin
+  try {
+    const { collection, getDocs } = await import("https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js");
+    const snapshot = await getDocs(collection(window.db, "accounts"));
+    const found = [];
+    snapshot.forEach(d => {
+      const data = d.data() || {};
+      if (data.username) found.push(String(data.username).toLowerCase());
+    });
+
+    // Fallback to hardcoded `employees` if accounts collection is empty
+    const list = found.length ? found : employees.slice();
+
+    // Update in-memory employees list (merge unique)
+    list.forEach(u => {
+      if (!employees.includes(u)) employees.push(u);
+    });
+
+    // Populate select
+    list.forEach(e => {
+      empSelect.innerHTML += `<option value="${e}">${e.toUpperCase()}</option>`;
+    });
+  } catch (e) {
+    // If Firestore fails, fallback to local list
+    console.error("Error loading accounts for admin dropdown:", e);
+    employees.forEach(e => {
+      empSelect.innerHTML += `<option value="${e}">${e.toUpperCase()}</option>`;
+    });
+  }
 }
 
 async function loadAttendance() {
@@ -637,6 +696,8 @@ async function createNewAccount() {
     });
     alert("Account created successfully!");
     closeCreateAccountModal();
+    // Refresh admin dropdown so admin can immediately see the new user
+    try { await loadAdminDropdown(); } catch (e) { console.warn('Could not refresh admin dropdown', e); }
   } catch (e) {
     console.error("Error creating account:", e);
     alert("Error creating account");
@@ -722,5 +783,9 @@ async function downloadAttendancePDF(period) {
   }
 }
 
-// Load dark mode on startup
 document.addEventListener("DOMContentLoaded", loadDarkModePreference);
+// Load dark mode on startup and restore session
+document.addEventListener("DOMContentLoaded", async () => {
+  loadDarkModePreference();
+  await restoreSession();
+});
