@@ -1,7 +1,14 @@
 body {
     font-family: Arial;
     background: #eef2f6;
-    padding: 20px
+    color: #333;
+    padding: 20px;
+    transition: background 0.3s, color 0.3s;
+}
+
+body.dark-mode {
+    background: #1a1a1a;
+    color: #f0f0f0;
 }
 
 h1,
@@ -11,13 +18,25 @@ h3 {
     color: #1f4aa8
 }
 
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3 {
+    color: #6ab7ff;
+}
+
 .box {
     max-width: 480px;
     margin: auto;
     background: #fff;
     padding: 20px;
     border-radius: 8px;
-    margin-bottom: 20px
+    margin-bottom: 20px;
+    transition: background 0.3s, color 0.3s;
+}
+
+body.dark-mode .box {
+    background: #2d2d2d;
+    color: #f0f0f0;
 }
 
 input,
@@ -25,7 +44,15 @@ button,
 select {
     padding: 8px;
     margin: 6px;
-    width: 100%
+    width: 100%;
+    transition: background 0.3s, color 0.3s;
+}
+
+body.dark-mode input,
+body.dark-mode select {
+    background: #3d3d3d;
+    color: #f0f0f0;
+    border: 1px solid #555;
 }
 
 button {
@@ -33,7 +60,12 @@ button {
     color: #fff;
     border: none;
     border-radius: 4px;
-    cursor: pointer
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    opacity: 0.9;
 }
 
 .logout {
@@ -51,14 +83,26 @@ button {
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px
+    margin-top: 10px;
+    background: #fff;
+    transition: background 0.3s, color 0.3s;
+}
+
+body.dark-mode table {
+    background: #2d2d2d;
 }
 
 th,
 td {
     border: 1px solid #ccc;
     padding: 6px;
-    text-align: center
+    text-align: center;
+    transition: border-color 0.3s, color 0.3s;
+}
+
+body.dark-mode th,
+body.dark-mode td {
+    border-color: #555;
 }
 
 th {
@@ -71,6 +115,112 @@ th {
     font-size: 12px
 }
 
+.accept {
+    background: #2e7d32;
+    font-size: 12px
+}
+
+.reject {
+    background: #d32f2f;
+    font-size: 12px
+}
+
+.accepted {
+    color: #2e7d32;
+    font-weight: bold;
+}
+
+.rejected {
+    color: #d32f2f;
+    font-weight: bold;
+}
+
 .hidden {
     display: none
+}
+
+.restore {
+    background: #1976d2;
+    font-size: 12px;
+    margin-right: 6px;
+}
+
+.permdelete {
+    background: #8b0000;
+    font-size: 12px;
+}
+
+.dark-mode-toggle {
+    background: #f39c12;
+    float: right;
+    font-size: 12px;
+    padding: 8px 12px;
+    width: auto;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+body.dark-mode .modal {
+    background-color: rgba(0,0,0,0.8);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 8px;
+}
+
+body.dark-mode .modal-content {
+    background-color: #2d2d2d;
+    border-color: #555;
+    color: #f0f0f0;
+}
+
+.close-modal {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    color: #000;
+}
+
+body.dark-mode .close-modal:hover {
+    color: #fff;
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+
+.pdf-options {
+    display: flex;
+    gap: 6px;
+}
+
+.pdf-options button {
+    width: auto;
+    flex: 1;
 }
