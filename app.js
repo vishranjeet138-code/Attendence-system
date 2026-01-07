@@ -233,6 +233,33 @@ async function login() {
   let u = username.value.toLowerCase().trim();
   let p = password.value;
 
+  // First, try to read explicit account document from Firestore (created via Create Account)
+  try {
+    const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js");
+    const accRef = doc(window.db, "accounts", u);
+    const accSnap = await getDoc(accRef);
+    if (accSnap.exists()) {
+      const acc = accSnap.data() || {};
+      if (p !== acc.password) return alert("Wrong Password");
+      currentUser = u;
+      isAdmin = acc.accountType === "admin";
+      loginBox.classList.add("hidden");
+      mainPanel.classList.remove("hidden");
+      welcome.innerText = "Welcome " + currentUser.toUpperCase();
+      await loadToday();
+      if (isAdmin) {
+        adminPanel.classList.remove("hidden");
+        loadAdminDropdown();
+        await loadWeekOffs();
+        setTimeout(() => loadAttendance(), 500);
+      }
+      return;
+    }
+  } catch (e) {
+    console.error("Error checking accounts collection:", e);
+  }
+
+  // Fallback to legacy/local in-memory authentication
   if (!employees.includes(u)) return alert("Invalid User");
 
   if (adminPasswords[u]) {
