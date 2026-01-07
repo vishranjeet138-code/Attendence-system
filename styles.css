@@ -153,9 +153,11 @@ th {
 .dark-mode-toggle {
     background: #f39c12;
     float: right;
-    font-size: 12px;
-    padding: 8px 12px;
+    font-size: 13px;
+    padding: 6px 10px;
     width: auto;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
 }
 
 .modal {
@@ -223,4 +225,73 @@ body.dark-mode .close-modal:hover {
 .pdf-options button {
     width: auto;
     flex: 1;
+}
+
+/* Responsive adjustments */
+/* Make boxes use most of viewport on small screens */
+@media (max-width: 800px) {
+    .box {
+        max-width: 95%;
+        margin: 12px auto;
+        padding: 12px;
+    }
+
+    /* Keep toggle fixed but smaller and non-intrusive */
+    .dark-mode-toggle {
+        position: fixed;
+        top: 8px;
+        right: 8px;
+        z-index: 1200;
+        padding: 6px 8px;
+        font-size: 12px;
+        opacity: 0.95;
+    }
+
+    /* add safe top spacing so fixed toggle doesn't cover content */
+    body {
+        padding-top: 56px; /* leaves space for fixed toggle */
+    }
+
+    input, button, select {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .pdf-options {
+        flex-direction: column;
+    }
+
+    .pdf-options button {
+        width: 100%;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 8% auto;
+    }
+}
+
+/* Make tables horizontally scrollable on small screens */
+@media (max-width: 900px) {
+    table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    th, td {
+        white-space: nowrap;
+        padding: 6px 8px;
+    }
+}
+
+/* Improve touch targets on very small screens */
+@media (max-width: 420px) {
+    button, input, select {
+        padding: 10px;
+        font-size: 15px;
+    }
+
+    h1, h2, h3 { font-size: 18px; }
 }
