@@ -10,6 +10,7 @@
 <body>
 
 	<h1>IDFC Attendance</h1>
+	<button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙 Dark Mode</button>
 
 	<!-- LOGIN -->
 	<div id="loginBox" class="box">
@@ -17,6 +18,7 @@
 		<input id="username" placeholder="Username">
 		<input id="password" type="password" placeholder="Password">
 		<button onclick="login()">Login</button>
+		<button onclick="openCreateAccountModal()" style="background: #1565c0;">Create New Account</button>
 	</div>
 
 	<!-- MAIN PANEL -->
@@ -29,6 +31,12 @@
 		<h3>Apply Week Off</h3>
 		<input type="date" id="weekOffDate">
 		<button class="weekoff" onclick="applyWeekOff()">Apply Week Off</button>
+
+		<h3>Attendance Report</h3>
+		<div class="pdf-options">
+			<button onclick="downloadAttendancePDF('week')" style="background: #1565c0;">Download Week PDF</button>
+			<button onclick="downloadAttendancePDF('month')" style="background: #1565c0;">Download Month PDF</button>
+		</div>
 
 		<h3>Today Status</h3>
 		<table>
@@ -63,16 +71,63 @@
 		</table>
 
 		<h3>📅 Week Off Updates</h3>
+		<button id="toggleRecycleBtn" onclick="toggleRecycleBin()">Show Recycle Bin</button>
 		<table>
 			<thead>
 				<tr>
 					<th>Employee</th>
 					<th>Week Off Date</th>
 					<th>Applied On</th>
+					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody id="weekOffTable"></tbody>
 		</table>
+
+		<div id="recycleSection" class="hidden">
+			<h3>🗑️ Recycle Bin</h3>
+			<table>
+				<thead>
+					<tr>
+						<th>Type</th>
+						<th>Employee</th>
+						<th>Date</th>
+						<th>Details</th>
+						<th>Deleted On</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody id="recycleTable"></tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- CREATE ACCOUNT MODAL -->
+	<div id="createAccountModal" class="modal">
+		<div class="modal-content">
+			<span class="close-modal" onclick="closeCreateAccountModal()">&times;</span>
+			<h2>Create New Account</h2>
+			<div class="form-group">
+				<label>Username:</label>
+				<input id="newUsername" type="text" placeholder="Enter username">
+			</div>
+			<div class="form-group" id="accountTypeGroup" style="display: none;">
+				<label>Account Type:</label>
+				<select id="newAccountType">
+					<option value="employee">Employee</option>
+					<option value="admin">Admin</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label>Password:</label>
+				<input id="newPassword" type="password" placeholder="Enter password">
+			</div>
+			<div class="form-group">
+				<label>Confirm Password:</label>
+				<input id="confirmPassword" type="password" placeholder="Confirm password">
+			</div>
+			<button onclick="createNewAccount()" style="width: 100%;">Create Account</button>
+		</div>
 	</div>
 	<script type="module">
 		// Import Firebase SDKs
